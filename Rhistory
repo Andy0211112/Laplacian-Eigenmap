@@ -1,0 +1,23 @@
+knitr::opts_chunk$set(echo = TRUE)
+setwd("D:/Study/Courses/2024Spring/multivariate/Project/code/0511seg")
+rawdf <- read.csv("pineapple.csv")
+# 表格的第一列是單詞名，故排掉
+df <- rawdf[sample(1:90000,2000),]
+head(df)
+# 準備
+tt <- 1e4
+method <- "knn" # 選KNN還是ENN?
+k <- 3 # 找幾個鄰居？
+epsilon <- 0.5 # 相鄰的閾值？（初得到數據集不了解其距離尺度，需要多探索）
+# 將數據框轉換成矩陣，便於調用函數
+# scale 意味著行和列的分離：你把列當做屬性，而不是什麼可以和行任意調換的東西
+# 但 scale意味著你認為兩列之間沒有可比性。
+df_mat <- as.matrix(df, nrows=nrow(df))
+# Generating 3d scatter plot
+library(plotly)
+fig <- plot_ly(df, x=~x,y=~y,z=~255-gray_value,color=~gray_value,size = c(0.8))
+fig <- fig %>% add_markers()
+fig <- fig %>% layout(scene = list(xaxis = list(title = 'x'),
+yaxis = list(title = 'y'),
+zaxis = list(title = 'intensity')))
+fig
